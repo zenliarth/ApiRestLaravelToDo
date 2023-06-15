@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Livewire\Dashboard\Tasks\Index;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,7 +33,7 @@ Route::group([
         'as' => 'dashboard.',
     ], function () {
         Route::view('/', 'dashboard')->name('index');
-        Route::view('/tasks', 'dashboard')->name('tasks.index');
+        Route::get('/tasks', Index::class)->name('tasks.index');
     });
 });
 
