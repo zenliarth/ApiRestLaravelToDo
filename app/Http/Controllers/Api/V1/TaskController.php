@@ -15,14 +15,11 @@ class TaskController extends Controller
         return TaskResource::collection(Task::all());
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(StoreTaskRequest $request)
     {
-        //
+        $task = Task::create($request->validated());
+
+        return TaskResource::make($task);
     }
 
     public function show(Task $task)
@@ -30,18 +27,17 @@ class TaskController extends Controller
         return TaskResource::make($task);
     }
 
-    public function edit(Task $task)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
-    }
+        $task->update($request->validated());
 
- public function update(UpdateTaskRequest $request, Task $task)
- {
-     //
- }
+        return TaskResource::make($task);
+    }
 
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+
+        return response()->noContent();
     }
 }
