@@ -15,6 +15,7 @@ class Task extends Model
         'created_by',
         'title',
         'description',
+        'completed',
     ];
 
     public function createdBy(): BelongsTo

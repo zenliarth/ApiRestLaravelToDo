@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AttachmentController;
 use App\Http\Controllers\Api\V1\CompleteTaskController;
 use App\Http\Controllers\Api\V1\TaskController;
 use Illuminate\Http\Request;

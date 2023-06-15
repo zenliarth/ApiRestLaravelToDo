@@ -14,6 +14,7 @@ class TaskResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'completed' => (bool) $this->completed,
+            'attachments' => $this->attachments
         ];
     }
 }

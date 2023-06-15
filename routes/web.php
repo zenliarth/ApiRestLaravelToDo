@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Livewire\Dashboard\Tasks\Index;
+use App\Http\Livewire\Dashboard\Tasks\Manage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,7 +35,7 @@ Route::group([
     ], function () {
         Route::view('/', 'dashboard')->name('index');
         Route::get('/tasks', Index::class)->name('tasks.index');
-        Route::get('/tasks/{task?}/manage', Index::class)->name('tasks.manage');
+        Route::get('/tasks/manage/{task?}', Manage::class)->name('tasks.manage');
     });
 });
 

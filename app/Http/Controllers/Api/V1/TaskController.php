@@ -12,7 +12,11 @@ class TaskController extends Controller
 {
     public function index()
     {
-        return TaskResource::collection(Task::all());
+        return TaskResource::collection(
+            Task::query()
+                ->with('attachments')
+                ->get()
+        );
     }
 
     public function store(StoreTaskRequest $request)
