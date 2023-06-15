@@ -35,9 +35,13 @@
                           </td>
                           <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
                             @if($task['completed'])
-                                true
+                                <span class="bg-green-500 text-white rounded-full text-xs font-medium py-1 px-4">
+                                    Completed
+                                </span>
                             @else
-                               false
+                            <span class="bg-gray-500 text-white rounded-full text-xs font-medium py-1 px-3">
+                                incompleted
+                            </span>
                             @endif
                           </td>
                           <td class="relative truncate whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">

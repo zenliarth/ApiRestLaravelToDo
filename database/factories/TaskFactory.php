@@ -16,6 +16,7 @@ class TaskFactory extends Factory
             'created_by' => User::factory(),
             'title' => fake()->sentence,
             'description' => fake()->paragraph(),
+            'completed' => random_int(0, 1),
         ];
     }
 }
