@@ -10,10 +10,12 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('created_by')->constrained('users');
             $table->string('title');
             $table->string('description');
             $table->boolean('completed')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
