@@ -10,6 +10,7 @@ class Index extends Component
     public function getTasksProperty(): array
     {
         return Task::query()
+            ->whereCreatedBy(auth()->user()->id)
             ->latest()
             ->get()
             ->toArray();
@@ -19,6 +20,13 @@ class Index extends Component
     {
         $task->update([
             'completed' => true,
+        ]);
+    }
+
+    public function markAsIncomplete(Task $task): void
+    {
+        $task->update([
+            'completed' => false,
         ]);
     }
 

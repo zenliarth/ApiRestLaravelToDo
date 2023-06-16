@@ -12,12 +12,14 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        Task::factory(10)->create();
-
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Team',
             'email' => 'team@team.com',
             'password' => bcrypt('password'),
+        ]);
+
+        Task::factory(10)->create([
+            'created_by' => $user->id,
         ]);
     }
 }

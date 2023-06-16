@@ -14,7 +14,7 @@ class TaskController extends Controller
     {
         return TaskResource::collection(
             Task::query()
-                ->with('attachments')
+                ->whereCreatedBy(auth()->user()->id)
                 ->get()
         );
     }
