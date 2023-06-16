@@ -14,6 +14,7 @@ class TaskController extends Controller
     {
         return TaskResource::collection(
             Task::query()
+                ->with('createdBy')
                 ->whereCreatedBy(auth()->user()->id)
                 ->get()
         );

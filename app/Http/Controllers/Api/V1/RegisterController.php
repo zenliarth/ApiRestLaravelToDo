@@ -35,6 +35,7 @@ class RegisterController extends BaseController
         $credentials = $request->validated();
 
         if (Auth::attempt($credentials)) {
+            /** @var User $user */
             $user = Auth::user();
             $token = $user->createToken(config('app.name'))->plainTextToken;
             $response = [
@@ -50,7 +51,10 @@ class RegisterController extends BaseController
 
     public function logout(): JsonResponse
     {
-        Auth::logout();
+        /** @var User $user */
+        $user = auth()->user();
+
+        $user->tokens()->delete();
 
         return $this->sendResponse(true, 'User logged out successfully.');
     }
