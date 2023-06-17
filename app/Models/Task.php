@@ -27,4 +27,9 @@ class Task extends Model
     {
         return $this->hasMany(Attachment::class);
     }
+
+    public function getAttachmentUrlAttribute(): string
+    {
+        return $this->attachments()->first()->path ?? '';
+    }
 }

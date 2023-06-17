@@ -1,17 +1,46 @@
-<div class="">
-    <form class="max-w-xl mx-auto p-8" wire:submit.prevent="save">
+<div class="" x-data="{
+    imageUrl: '{{ $task->attachmentUrl }}',
+    editing: '{{ $editing }}',
+    hasNotAttachmentSaved: '{{ $task->attachmentUrl === '' }}',
+    temporaryFile: '',
+    fileChosen(event) {
+        if (!event.target.files.length) return;
+        let file = event.target.files[0];
+
+        const tempUrl = URL.createObjectURL(file);
+
+        this.imageUrl = tempUrl;
+        this.temporaryFile = file;
+    },
+    removePhoto(){
+        this.temporaryFile = '';
+        this.imageUrl = '';
+        this.hasNotAttachmentSaved = true;
+        $wire.set('image', '');
+        $wire.set('removeOldFile', true);
+    },
+    save(){
+        if (this.temporaryFile){
+            @this.upload('image', this.temporaryFile);
+        }
+
+        $wire.call('save');
+    }
+}">
+    <form class="max-w-xl p-8 mx-auto" x-on:submit.prevent="save">
         <div class="space-y-12">
-            <div class="border-b border-white/10 pb-12">
+            <div class="pb-12 border-b border-white/10">
                 <h2 class="text-base font-semibold leading-7 text-white">Create Task</h2>
                 <p class="mt-1 text-sm leading-6 text-gray-400">Please, fill the fields to create a new task</p>
 
-                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="grid grid-cols-1 mt-10 gap-x-6 gap-y-8 sm:grid-cols-6">
                     <div class="sm:col-span-6">
                         <label for="username" class="block text-sm font-medium leading-6 text-white">Title</label>
                         <div class="mt-2">
                             <div
                                 class="flex rounded-md bg-white/5 ring-1 ring-inset ring-white/10 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500">
-                                <input type="text" wire:model.defer="task.title" name="title" id="title" autocomplete="title"
+                                <input type="text" wire:model.defer="task.title" name="title" id="title"
+                                    autocomplete="title"
                                     class="flex-1 rounded pl-3 border-0 bg-transparent py-1.5 text-white focus:ring-0 sm:text-sm sm:leading-6"
                                     placeholder="// Todo">
                             </div>
@@ -21,43 +50,138 @@
                     <div class="col-span-full">
                         <label for="about" class="block text-sm font-medium leading-6 text-white">Description</label>
                         <div class="mt-2">
-                            <textarea  wire:model.defer="task.description" id="description" name="description" rows="3"
+                            <textarea wire:model.defer="task.description" id="description" name="description" rows="3"
                                 class="block resize-none w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"></textarea>
                         </div>
                         <p class="mt-3 text-sm leading-6 text-gray-400">Describe what you need to do.</p>
                     </div>
 
                     <div class="col-span-full">
-                        <label for="cover-photo" class="block text-sm font-medium leading-6 text-white">Attachments</label>
-                        <div
-                            class="mt-2 flex justify-center rounded-lg border border-dashed border-white/25 px-6 py-10">
-                            <div class="text-center">
-                                <svg class="mx-auto h-12 w-12 text-gray-500" viewBox="0 0 24 24" fill="currentColor"
-                                    aria-hidden="true">
-                                    <path fill-rule="evenodd"
-                                        d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <div class="mt-4 flex text-sm leading-6 text-gray-400">
-                                    <label for="file-upload"
-                                        class="relative cursor-pointer rounded-md bg-gray-900 font-semibold text-white focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:ring-offset-gray-900 hover:text-indigo-500">
-                                        <span>Upload a file</span>
-                                        <input id="file-upload" name="file-upload" type="file" class="sr-only">
-                                    </label>
-                                    <p class="pl-1">or drag and drop</p>
+                        <label for="cover-photo"
+                            class="block text-sm font-medium leading-6 text-white">Attachments</label>
+                        <div class="mb-4 col-span-full" >
+                            <div class="relative flex flex-col items-center w-full mt-2 cursor-pointer"
+                            x-show="!temporaryFile && hasNotAttachmentSaved " x-cloak>
+                                <div @click="$refs.image.click()"
+                                    class="flex justify-center w-full px-6 py-10 mt-2 border border-dashed rounded-lg border-white/25">
+                                    <div class="text-center">
+                                        <svg class="w-12 h-12 mx-auto text-gray-500" viewBox="0 0 24 24"
+                                            fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        <div class="flex mt-4 text-sm leading-6 text-center text-gray-400">
+                                            <label for="new_photo"
+                                                class="relative font-semibold text-white bg-gray-900 rounded-md cursor-pointer focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:ring-offset-gray-900 hover:text-indigo-500">
+                                                <span>Upload a file</span>
+                                            </label>
+                                            <input accept="image/*" type="file" id="new_photo" name="new_image"
+                                                wire:model="image" x-ref="image" class="hidden"
+                                                @change="fileChosen" />
+                                        </div>
+                                        <p class="text-xs leading-5 text-gray-400">PNG, JPG, GIF up to 3MB</p>
+                                    </div>
                                 </div>
-                                <p class="text-xs leading-5 text-gray-400">PNG, JPG, GIF up to 10MB</p>
                             </div>
+
+                            <div class="flex flex-wrap gap-2 mt-4" x-show="imageUrl" x-cloak>
+                                    <div class="relative flex items w-72 h-72">
+                                        <img :src="imageUrl" class="object-cover" accept="image/*" />
+                                        <div class="absolute flex items-center justify-center w-6 h-6 p-1 transition-all rounded-full cursor-pointer top-2 right-2 hover:bg-red-500 hover:text-white"
+                                                @click="removePhoto">
+                                            <x-svg.trash  class="text-gray-700" />
+                                        </div>
+                                    </div>
+                            </div>
+                            @error('image')
+                            <div class="pt-2 text-red-500">
+                                {{ str_replace('image', 'photo', $message) }}
+                            </div>
+                            @enderror
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-6 flex items-center justify-end gap-x-6">
+                <div class="flex items-center justify-end mt-6 gap-x-6">
                     <a href="{{ route('dashboard.tasks.index') }}">
                         <button type="button" class="text-sm font-semibold leading-6 text-white">Cancel</button>
                     </a>
-                    <button type="submit" class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Save</button>
-                  </div>
+                    <button type="submit"
+                        class="px-3 py-2 text-sm font-semibold text-white bg-indigo-500 rounded-md shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Save</button>
+                </div>
             </div>
     </form>
 </div>
+{{--
+<div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="w-full p-4 bg-white rounded-lg sm:p-8">
+        <div class="w-full mt-2 sm:mt-0">
+            <div class="md:col-span-1">
+                <div class="sm:px-6">
+                    <h3 class="text-base font-semibold leading-6 text-gray-900">{{ $title }}</h3>
+                    <p class="mt-1 text-sm text-gray-600">{{ $subtitle }}</p>
+                </div>
+            </div>
+            <div class="w-full sm:mt-4 md:grid md:grid-cols-2 md:gap-6">
+                <div class="mt-2 md:col-span-2 md:mt-0">
+                    <div>
+                        <div class="overflow-hidden">
+                            <div class="py-5 bg-white sm:px-6 sm:py-0">
+                                <div class="grid grid-cols-6 gap-y-6 gap-x-4">
+                                    <div class="sm:col-span-6">
+                                        <label for="photo"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Photo</label>
+                                        <div class="relative flex items-center mt-2 cursor-pointer">
+                                            <template x-if="!imageUrl" key="image-1">
+                                                <div class="flex items-center">
+                                                    <span class="overflow-hidden bg-gray-100 rounded-full w-11 h-11"
+                                                        @click="$refs.image.click()">
+                                                        <x-svg.user-profile />
+                                                    </span>
+                                                </div>
+                                            </template>
+                                            <template x-if="imageUrl">
+                                                <img :src="imageUrl"
+                                                    class="object-cover border border-gray-200 rounded-full w-14 h-14"
+                                                    accept="image/*" />
+                                            </template>
+                                            <button type="button"
+                                                class="ml-5 rounded-md bg-white py-1.5 px-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                                @click="$refs.image.click()">Change</button>
+                                            <div class="flex justify-center mx-auto">
+                                                <input accept="image/*" type="file" id="new_photo" name="new_image"
+                                                    wire:model="image" x-ref="image" class="hidden"
+                                                    @change="fileChosen" />
+                                            </div>
+                                            <div class="absolute w-6 h-6 p-1 text-gray-600 bg-gray-100 rounded-full -top-4 left-[3.375rem] hover:bg-red-500 hover:text-white transition-all"
+                                                @click="removePhoto" x-show="imageUrl" x-cloak>
+                                                <x-icon name="x" class="w-4 h-4" />
+                                            </div>
+                                        </div>
+                                        @error('image')
+                                        <div class="pt-2 text-red-500">
+                                            {{ str_replace('image', 'photo', $message) }}
+                                        </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-span-full sm:col-span-6">
+                                        <x-textarea label="Biography" wire:model.defer="faculty.bio"
+                                            placeholder="Write a few sentences about yourself." />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="py-3 text-right sm:px-6">
+                                <a href="{{ route('admin.faculties.index') }}">
+                                    <x-button outline label="Cancel" />
+                                </a>
+                                <x-button label="Save" x-on:click="save" primary />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> --}}
