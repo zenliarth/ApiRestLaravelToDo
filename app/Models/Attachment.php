@@ -10,6 +10,13 @@ class Attachment extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'task_id',
+        'name',
+        'path',
+        'type',
+    ];
+
     public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class);

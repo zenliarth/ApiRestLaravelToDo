@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\V1\CompleteTaskController;
+use App\Http\Controllers\Api\V1\DeleteAttachmentController;
 use App\Http\Controllers\Api\V1\RegisterController;
+use App\Http\Controllers\Api\V1\StoreAttachmentController;
 use App\Http\Controllers\Api\V1\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::apiResource('/tasks', TaskController::class);
     Route::patch('/tasks/{task}/complete', CompleteTaskController::class);
+    Route::post('/tasks/{task}/attachments', StoreAttachmentController::class);
+    Route::delete('/attachments/{attachment}', DeleteAttachmentController::class);
 });
 
 Route::controller(RegisterController::class)->group(function () {
