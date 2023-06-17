@@ -22,7 +22,10 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request)
     {
-        $task = Task::create($request->validated());
+        $data = $request->validated();
+        $data['created_by'] = auth()->user()->id;
+
+        $task = Task::create($data);
 
         return TaskResource::make($task);
     }
