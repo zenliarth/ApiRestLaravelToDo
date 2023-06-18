@@ -10,7 +10,7 @@ class Index extends Component
     public function getTasksProperty(): array
     {
         return Task::query()
-            ->whereCreatedBy(auth()->user()->id)
+            ->whereCreatedBy(auth()->user()?->id)
             ->latest()
             ->get()
             ->toArray();

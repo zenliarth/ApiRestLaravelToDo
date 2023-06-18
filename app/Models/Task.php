@@ -53,6 +53,10 @@ class Task extends Model
         'completed',
     ];
 
+    protected $cast = [
+        'completed' => 'boolean',
+    ];
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class);
