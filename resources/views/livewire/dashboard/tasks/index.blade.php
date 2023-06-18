@@ -32,6 +32,9 @@
                                             <th scope="col"
                                                 class="px-3 py-3.5 text-left text-sm font-semibold text-white">Status
                                             </th>
+                                            <th scope="col"
+                                                class="px-3 py-3.5 text-left text-sm font-semibold text-white">Attachments
+                                            </th>
                                             <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
                                                 <span class="sr-only">Edit</span>
                                             </th>
@@ -59,6 +62,9 @@
                                                     incompleted
                                                 </span>
                                                 @endif
+                                            </td>
+                                            <td class="pl-10 text-white">
+                                                {{ $task['attachments_count'] }}
                                             </td>
                                             <td
                                                 class="relative flex items-center justify-end gap-2 py-4 pl-3 pr-4 text-sm font-medium truncate whitespace-nowrap sm:pr-0">

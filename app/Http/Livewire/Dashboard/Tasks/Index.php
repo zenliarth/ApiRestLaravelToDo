@@ -11,6 +11,8 @@ class Index extends Component
     {
         return Task::query()
             ->whereCreatedBy(auth()->user()?->id)
+            ->with('attachments')
+            ->withCount('attachments')
             ->latest()
             ->get()
             ->toArray();
