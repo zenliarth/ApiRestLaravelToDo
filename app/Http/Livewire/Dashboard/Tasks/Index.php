@@ -11,6 +11,8 @@ class Index extends Component
     {
         return Task::query()
             ->whereCreatedBy(auth()->user()?->id)
+            ->with('attachments')
+            ->withCount('attachments')
             ->latest()
             ->get()
             ->toArray();
@@ -32,6 +34,8 @@ class Index extends Component
 
     public function deleteTask(Task $task): void
     {
+        $task->attachments()->delete();
+
         $task->delete();
     }
 
