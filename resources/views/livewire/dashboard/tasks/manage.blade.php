@@ -60,9 +60,9 @@
                         <label for="cover-photo"
                             class="block text-sm font-medium leading-6 text-white">Attachments</label>
                         <div class="mb-4 col-span-full" >
-                            <div class="relative flex flex-col items-center w-full mt-2 cursor-pointer"
+                            <div class="relative flex flex-col items-center w-full mt-2"
                             x-show="!temporaryFile && hasNotAttachmentSaved " x-cloak>
-                                <div @click="$refs.image.click()"
+                                <div
                                     class="flex justify-center w-full px-6 py-10 mt-2 border border-dashed rounded-lg border-white/25">
                                     <div class="text-center">
                                         <svg class="w-12 h-12 mx-auto text-gray-500" viewBox="0 0 24 24"
