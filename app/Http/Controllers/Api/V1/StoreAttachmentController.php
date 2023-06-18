@@ -49,7 +49,10 @@ class StoreAttachmentController extends BaseController
                 }
             }
 
-            return AttachmentResource::collection($attachments);
+            return $this->sendResponse(
+                AttachmentResource::collection($attachments),
+                'Attachment successfully uploaded'
+            );
         }
     }
 }
