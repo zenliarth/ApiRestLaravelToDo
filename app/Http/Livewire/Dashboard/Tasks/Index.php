@@ -32,6 +32,8 @@ class Index extends Component
 
     public function deleteTask(Task $task): void
     {
+        $task->attachments()->delete();
+
         $task->delete();
     }
 

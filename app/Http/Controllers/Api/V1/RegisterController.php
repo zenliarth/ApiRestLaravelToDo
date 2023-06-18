@@ -51,10 +51,7 @@ class RegisterController extends BaseController
 
     public function logout(): JsonResponse
     {
-        /** @var User $user */
-        $user = auth()->user();
-
-        $user->tokens()->delete();
+        Auth::logout();
 
         return $this->sendResponse(true, 'User logged out successfully.');
     }
